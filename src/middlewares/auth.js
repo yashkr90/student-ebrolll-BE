@@ -1,3 +1,12 @@
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// Secret key for JWT
+const secretKey = process.env.SECRETKEY;
+
 const authenticate = (req, res, next) => {
     // const bearerHeader=req.header('Authorization');
     // if(typeof bearerHeader!== 'undefined'){

@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const Connection = async (mongourl) => {
   const URL = mongourl;
+ 
   mongoose.set("strictQuery", true);
 
   
