@@ -7,6 +7,7 @@ dotenv.config();
 
 const secretKey = process.env.SECRETKEY;
 
+// add user to the data base
 export const addUser = async (req, res) => {
   try {
     const { userName, universityID, password } = req.body;
@@ -34,6 +35,34 @@ export const addUser = async (req, res) => {
   }
 };
 
+//  insert data into the Session model
+export const addSession = async (req, res) => {
+  try {
+    // Extract the data from the request body
+    const { deanID, studentID, startTime, endTime, bookedBy, status } =
+      req.body;
+
+    // Create a new session document
+    const session = new Session({
+      deanID,
+
+      startTime,
+      endTime,
+      bookedBy,
+      status,
+    });
+
+    // Save the session to the database
+    await session.save();
+
+    res.status(201).json({ message: "Session created successfully", session });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// authenticate student and return JWT token
 export const authStudent = async (req, res) => {
   const { userName, universityID, password } = req.body;
   const user = await User.findOne({ universityID });
@@ -49,6 +78,7 @@ export const authStudent = async (req, res) => {
   res.json({ token });
 };
 
+//authentiate dean and return JWT token
 export const authDean = async (req, res) => {
   const { userName, universityID, password } = req.body;
   const user = await User.findOne({ universityID });
@@ -64,6 +94,7 @@ export const authDean = async (req, res) => {
   res.json({ token });
 };
 
+// get all Available session with the dean
 export const getDeanSessions = async (req, res) => {
   try {
     const sessions = await Session.find({
@@ -113,6 +144,7 @@ export const getDeanSessions = async (req, res) => {
   }
 };
 
+// book slot with dean if the session is available
 export const bookSlot = async (req, res) => {
   try {
     const { sessionID } = req.body;
@@ -144,6 +176,7 @@ export const bookSlot = async (req, res) => {
   }
 };
 
+// get all Pending session when dean logins
 export const getPendingSessions = async (req, res) => {
   try {
     // dean's university ID is stored in req.user
